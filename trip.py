@@ -14,6 +14,7 @@ def findLongestTrip(line1, line2, memo):
     else:
         lose1 = findLongestTrip(line1[1:], line2, memo)
         lose2 = findLongestTrip(line1, line2[1:], memo)
+        lose12 = lose1[1] + lose2[1]
         lst = [0, [""]]
         lst[0] = max(lose1[0], lose2[0])
         lst[1] = [subStr for subStr in lose12 if len(subStr) == lst[0]]
