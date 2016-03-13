@@ -1,4 +1,3 @@
-# import datetime
 def findLongestTrip(line1, line2, memo):
     if line1 == "" or line2 == "":
         return [0, [""]]
@@ -24,20 +23,12 @@ def findLongestTrip(line1, line2, memo):
 numCases = int(input())
 if (numCases >= 1 and numCases <= 10):
     for i in range(0, numCases):
-        charCheck = []
         line1 = str(input())
         line2 = str(input())
         index = 0
-        while ((line1[index] not in charCheck) and (index < len(line1) and line1[index] not in line2)):
-            charCheck.append(line1[index])
-            index += 1
+        
         if (index < len(line1)):
-            # startTime = datetime.datetime.now()
             if ((len(line1) >= 1 and len(line1) <= 80) and (len(line2) >= 1 and len(line2) <= 80)):
                 lst = findLongestTrip(line1, line2, {})
                 wordDict = sorted(set(lst[1]))
                 print(*wordDict, sep='\n')
-
-                # endTime = datetime.datetime.now()
-                # timeDiff = endTime - startTime
-                # print("Time: " + str(1000 * timeDiff.total_seconds()))
