@@ -1,4 +1,3 @@
-import sys
 def findLongestTrip(line1, line2, memo):
     if line1 == '' or line2 == '':
         return [0, ['']]
