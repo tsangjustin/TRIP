@@ -3,76 +3,122 @@
 #include <math.h>
 #include <stdlib.h>
 
+// Struct of contactNodeLevel
 typedef struct contactNodeLevel {
-	int numChildren_;
-	struct contactNodeLevel* children[26];
+	int numLetters_;
+	struct contactNodeLevel* letters_[26];
 } Node;
 
+// Allocates memory in heap for Node
+// Instantiates value of numLetters_ = 0
+// Pointer of each index in Node array set to NULL
+Node* initNode() {
+	Node* node = malloc(sizeof(Node));
+	node->numLetters_ = 0;
+	int index;
+	for (index = 0; index < 26; ++index) {
+		node->letters_[index] = NULL;
+	}
+	return node;
+}
 
-char* findWord(Node* root, char* word) {
-	int i;
-	int lenSequence = word->length();
-	if (lenSequence == 0) {
-		// FInd all varitaion from this point
-	}
-	if (root->numChildren_ == 0) {
-		return ""
-	}
-	for (i = 0; i < lenSequence; ++i) {
-		if (== 1) {
-			++root.numChildren_;
-			root = root.childrenNodes_;
-			--lenSequence;
-		} else {
-			return ;
+char* findMatches(Node* root) {
+	char* matches;
+	int curr_index = 0;
+	while (root->numLetters_ > 0) {
+		if (root->letters_[curr_index] != NULL) {
+
 		}
 	}
-	return root_->numChildren_;
 }
 
 void addWord(Node* root, char* word) {
-	if (word.length() > 0) {
-		if (root->numChildren_ == 0) {
-			add(sequence, root.childrenNodes_)
-		} else {
-			int lenSequence = sequence.length()
-			while (lenSequence-- > 0) {
-				++root->numChildren_;
-				root->childrenNodes_ = new childrenNodes_;
+	if (word[0] != '\0') {
+		int index = 0;
+		int asciiVal;
+		while ((word[index + 1] != '\0') &&
+			   (root->letters_[asciiVal] != NULL)) {
+			asciiVal = (int)word[index++] - 97;
+			++root->numLetters_;
+			root = root->letters_[asciiVal];
+		}
+		while (word[index] != '\0') {
+			asciiVal = (int)word[index++] - 97;
+			root->letters_[asciiVal] = initNode();
+			++root->numLetters_;
+			root = root->letters_[asciiVal];
+		}
+	}
+}
+
+char* findWord(Node* root, char* word) {
+	char* output;
+	if (word[0] != '\0') {
+		int index = 0;
+		int asciiVal = (int)word[index++] - 97;
+		while ((word[index + 1] != '\0') && (root != NULL)) {
+			root = root->letters_[asciiVal];
+		}
+		if (root->numLetters_ > 0) {
+			output = findMatches(&root);
+		}
+	}
+	return output;
+}
+
+void freeMemory(Node* root) {
+	if (root->numLetters_ > 0) {
+		int i;
+		for (i = 0; i < 26 && root->numLetters_ > 0; ++i) {
+			if (root->letters_[i] != NULL) {
+				root->numLetters_ -= root->letters_[i]->numLetters_;
+				freeMemory(root->letters_[i]);
 			}
 		}
 	}
+	free(root);
+root = NULL;
 }
 
 int main() {
 	int numCommands;
 	scanf("%d\n", &numCommands);
-
 	if (numCommands >= 1 && numCommands <= 100000) {
-		Node root_;
-		printf("%d\n", root_.numChildren_);
-		root_.numChildren_ = 0;
-		printf("%d\n", root_.numChildren_);
+		Node* root_ = initNode();
+		// printf("%p\n", root_->letters_[22]);
+		// Node* child = malloc(sizeof(Node));
+		// root_->letters_[4] = child;
+		// if (root_->letters_[4] == NULL) {
+		// 	printf("%p\n", root_->letters_[4]);
+		// }
+		//printf("%d\n", root_->letters_[4]->numLetters_);
+		//Node* child = malloc(sizeof(Node));
+		//root_->letters_[0] = child;
+		//printf("%p\n", root_->letters_[0]->letters_);
 		int currNum;
 		for (currNum = 0; currNum < numCommands; ++currNum) {
 			char input[22];
 			fgets(input, 22, stdin);
 			char* line = strtok(input, " ");
-			printf("%d\n", (int)line[0]);
-			if (line == "add") {
-				//add(root_, strtok(NULL, ""));
+			// int i = 0;
+			// while (input[i] != '\n') {
+			// 	printf("%c\n", input[i++]);
+			// }
+			if (strncomp(line, "add") == 0) {
 				char* word = strtok(NULL, input);
-				printf("Adding %s\n", strtok(NULL, word));
-				addWord(&root_, word);
-
-			} else if (line == "find") {
-				//find(root_, strtok(NULL, ""));
+				if (input[0] != '\n') {
+					printf("Adding %s\n", word);
+					addWord(root_, word);
+				}
+			} else if (strncomp(line, "find") == 0) {
 				char* word = strtok(NULL, input);
-				printf("Finding %s\n", strtok(NULL, word));
-				findWord(&root_, word);
+				if ((root_->numLetters_ > 0) && (input[0] != '\n')) {
+					printf("Finding %s\n", word);
+					findWord(root_, word);
+				}
 			}
 		}
-
+		freeMemory(&root);
 	}
 	return 0;
 }
