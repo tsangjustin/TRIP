@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include <math.h>
 #include <stdlib.h>
 
 // Struct of contactNodeLevel
@@ -22,45 +21,57 @@ Node* initNode() {
 	return node;
 }
 
-char* findMatches(Node* root) {
-	char* matches;
-	int curr_index = 0;
-	while (root->numLetters_ > 0) {
-		if (root->letters_[curr_index] != NULL) {
+// char* findMatches(Node* root) {
+// 	char* matches;
+// 	int curr_index = 0;
+// 	while (root->numLetters_ > 1 || curr_index < 26) {
+// 		if (root->letters_[curr_index++] != NULL) {
 
-		}
-	}
-}
+// 		}
+// 	}
+// 	// If letter itself is word added
+// 	if (root->numLetters_ > 0) {
+// 		matches[curr_index] = "";
+// 	}
+// }
 
 void addWord(Node* root, char* word) {
 	if (word[0] != '\0') {
 		int index = 0;
-		int asciiVal;
-		while ((word[index + 1] != '\0') &&
+		int asciiVal = (int)word[index] - 97;
+		while ((word[index] != '\0' && word[index] != '\n') &&
 			   (root->letters_[asciiVal] != NULL)) {
-			asciiVal = (int)word[index++] - 97;
 			++root->numLetters_;
+			printf("%d\n", root->numLetters_);
 			root = root->letters_[asciiVal];
+			asciiVal = (int)word[++index] - 97;
 		}
-		while (word[index] != '\0') {
-			asciiVal = (int)word[index++] - 97;
+		while (word[index] != '\0' && word[index] != '\n') {
 			root->letters_[asciiVal] = initNode();
 			++root->numLetters_;
+			printf("%d\n", root->numLetters_);
 			root = root->letters_[asciiVal];
+			asciiVal = (int)word[++index] - 97;
 		}
+		//++root->numLetters_;
 	}
 }
 
-char* findWord(Node* root, char* word) {
-	char* output;
+int findWord(Node* root, char* word) {
+	int output = 0;
 	if (word[0] != '\0') {
 		int index = 0;
-		int asciiVal = (int)word[index++] - 97;
-		while ((word[index + 1] != '\0') && (root != NULL)) {
+		int asciiVal = (int)word[index] - 97;
+		while ((word[index] != '\0' && word[index] != '\n') && 
+			   (root->letters_[asciiVal] != NULL)) {
+			printf("%d\n", asciiVal);
 			root = root->letters_[asciiVal];
+			asciiVal = (int)word[++index] - 97;
 		}
-		if (root->numLetters_ > 0) {
-			output = findMatches(&root);
+		if ((word[index] == '\0' && word[index] != '\n') && 
+			 root->numLetters_ > 0) {
+			// output = findMatches(root);
+			output = root->numLetters_;	
 		}
 	}
 	return output;
@@ -77,7 +88,7 @@ void freeMemory(Node* root) {
 		}
 	}
 	free(root);
-root = NULL;
+	root = NULL;
 }
 
 int main() {
@@ -96,6 +107,10 @@ int main() {
 		//root_->letters_[0] = child;
 		//printf("%p\n", root_->letters_[0]->letters_);
 		int currNum;
+		char add[3];
+		strcpy(add, "add");
+		char find[4];
+		strcpy(find, "find");
 		for (currNum = 0; currNum < numCommands; ++currNum) {
 			char input[22];
 			fgets(input, 22, stdin);
@@ -104,21 +119,23 @@ int main() {
 			// while (input[i] != '\n') {
 			// 	printf("%c\n", input[i++]);
 			// }
-			if (strncomp(line, "add") == 0) {
-				char* word = strtok(NULL, input);
-				if (input[0] != '\n') {
-					printf("Adding %s\n", word);
-					addWord(root_, word);
+			int function = strcmp(line, add);
+			if (function == 0) {
+				line = strtok(NULL, "\0");
+				if (line[0] != '\n' && line[0] != '\0') {
+					addWord(root_, line);
 				}
-			} else if (strncomp(line, "find") == 0) {
-				char* word = strtok(NULL, input);
-				if ((root_->numLetters_ > 0) && (input[0] != '\n')) {
-					printf("Finding %s\n", word);
-					findWord(root_, word);
+			} 
+			function = strcmp(line, find);
+			if (function == 0) {
+				line = strtok(NULL, "\0");
+				if ((root_->numLetters_ > 0) && 
+					(line[0] != '\n'  && line[0] != '\0')) {
+					printf("%d\n", findWord(root_, line));
 				}
 			}
 		}
-		freeMemory(&root);
+		freeMemory(root_);
 	}
 	return 0;
 }
