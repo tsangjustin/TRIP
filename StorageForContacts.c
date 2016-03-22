@@ -36,45 +36,40 @@ Node* initNode() {
 // }
 
 void addWord(Node* root, char* word) {
-	if (word[0] != '\0') {
-		int index = 0;
-		int asciiVal = (int)word[index] - 97;
-		while ((word[index] != '\0' && word[index] != '\n') &&
-			   (root->letters_[asciiVal] != NULL)) {
+	int index = 0;
+	int asciiVal;
+	while (word[index] != '\0' && word[index] != '\n') {
+		asciiVal = (int)word[index] - 97;
+		if (root->letters_[asciiVal] != NULL) {
 			++root->numLetters_;
-			printf("%d\n", root->numLetters_);
 			root = root->letters_[asciiVal];
-			asciiVal = (int)word[++index] - 97;
+			++index;
+		} else {
+			break;
 		}
-		while (word[index] != '\0' && word[index] != '\n') {
-			root->letters_[asciiVal] = initNode();
-			++root->numLetters_;
-			printf("%d\n", root->numLetters_);
-			root = root->letters_[asciiVal];
-			asciiVal = (int)word[++index] - 97;
-		}
-		//++root->numLetters_;
 	}
+	while (word[index] != '\0' && word[index] != '\n') {
+		root->letters_[asciiVal] = initNode();
+		++root->numLetters_;
+		root = root->letters_[asciiVal];
+		asciiVal = (int)word[++index] - 97;
+	}
+	++root->numLetters_;
 }
 
 int findWord(Node* root, char* word) {
-	int output = 0;
-	if (word[0] != '\0') {
-		int index = 0;
-		int asciiVal = (int)word[index] - 97;
-		while ((word[index] != '\0' && word[index] != '\n') && 
-			   (root->letters_[asciiVal] != NULL)) {
-			printf("%d\n", asciiVal);
+	int index = 0;
+	int asciiVal;
+	while (word[index] != '\0' && word[index] != '\n') {
+		asciiVal = (int)word[index] - 97;
+		if (root->letters_[asciiVal] != NULL) {
 			root = root->letters_[asciiVal];
-			asciiVal = (int)word[++index] - 97;
-		}
-		if ((word[index] == '\0' && word[index] != '\n') && 
-			 root->numLetters_ > 0) {
-			// output = findMatches(root);
-			output = root->numLetters_;	
+			++index;
+		} else {
+			return 0;
 		}
 	}
-	return output;
+	return root->numLetters_;
 }
 
 void freeMemory(Node* root) {
@@ -107,9 +102,9 @@ int main() {
 		//root_->letters_[0] = child;
 		//printf("%p\n", root_->letters_[0]->letters_);
 		int currNum;
-		char add[3];
+		char add[4];
 		strcpy(add, "add");
-		char find[4];
+		char find[5];
 		strcpy(find, "find");
 		for (currNum = 0; currNum < numCommands; ++currNum) {
 			char input[22];
