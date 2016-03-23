@@ -128,6 +128,9 @@ int main() {
 					(line[0] != '\n'  && line[0] != '\0')) {
 					printf("%d\n", findWord(root_, line));
 				}
+				else{
+                    			printf("%d\n", 0);
+                		}
 			}
 		}
 		freeMemory(root_);
