@@ -12,7 +12,7 @@ typedef struct contactNodeLevel {
 // Instantiates value of numLetters_ = 0
 // Pointer of each index in Node array set to NULL
 Node* initNode() {
-	Node* node = malloc(sizeof(Node));
+	Node* node = (Node *)malloc(sizeof(Node));
 	node->numLetters_ = 0;
 	int index;
 	for (index = 0; index < 26; ++index) {
@@ -38,15 +38,15 @@ Node* initNode() {
 void addWord(Node* root, char* word) {
 	int index = 0;
 	if (word[index] != '\0' && word[index] != '\n') {
-		int asciiVal = (int)word[index] - 97;
+		int asciiVal;
 		while (word[index] != '\0' && word[index] != '\n') {
+			asciiVal = (int)word[index] - 97;
 			if (root->letters_[asciiVal] == NULL) {
 				root->letters_[asciiVal] = initNode();
 			}
 			++root->numLetters_;
 			root = root->letters_[asciiVal];
 			++index;
-			asciiVal = (int)word[index] - 97;
 		}
 		++root->numLetters_;
 	}
@@ -55,14 +55,14 @@ void addWord(Node* root, char* word) {
 long findWord(Node* root, char* word) {
 	int index = 0;
 	if (word[index] != '\0' && word[index] != '\n') {
-		int asciiVal = (int)word[index] - 97;
+		int asciiVal;
 		while (word[index] != '\0' && word[index] != '\n') {
+			asciiVal = (int)word[index] - 97;
 			if (root->letters_[asciiVal] == NULL) {
 				return 0;
 			}
 			root = root->letters_[asciiVal];
 			++index;
-			asciiVal = (int)word[index] - 97;
 		}
 		return root->numLetters_;
 	}
@@ -71,7 +71,7 @@ long findWord(Node* root, char* word) {
 
 void freeMemory(Node* root) {
 	int i;
-	for (i = 0; i < 26 && root->numLetters_ > 1; ++i) {
+	for (i = 0; i < 26 && root->numLetters_ >= 1; ++i) {
 		if (root->letters_[i] != NULL) {
 			root->numLetters_ -= root->letters_[i]->numLetters_;
 			freeMemory(root->letters_[i]);
@@ -104,8 +104,8 @@ int main() {
 		char find[5];
 		strcpy(find, "find");
 		for (currNum = 0; currNum < numCommands; ++currNum) {
-			char input[22];
-			fgets(input, 22, stdin);
+			char input[27];
+			fgets(input, 27, stdin);
 			char* line = strtok(input, " ");
 			// int i = 0;
 			// while (input[i] != '\n') {
