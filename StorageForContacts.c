@@ -4,7 +4,7 @@
 
 // Struct of contactNodeLevel
 typedef struct contactNodeLevel {
-	int numLetters_;
+	long numLetters_;
 	struct contactNodeLevel* letters_[26];
 } Node;
 
@@ -12,7 +12,7 @@ typedef struct contactNodeLevel {
 // Instantiates value of numLetters_ = 0
 // Pointer of each index in Node array set to NULL
 Node* initNode() {
-	Node* node = malloc(sizeof(Node));
+	Node* node = (Node *)malloc(sizeof(Node));
 	node->numLetters_ = 0;
 	int index;
 	for (index = 0; index < 26; ++index) {
@@ -37,49 +37,44 @@ Node* initNode() {
 
 void addWord(Node* root, char* word) {
 	int index = 0;
-	int asciiVal;
-	while (word[index] != '\0' && word[index] != '\n') {
-		asciiVal = (int)word[index] - 97;
-		if (root->letters_[asciiVal] != NULL) {
+	if (word[index] != '\0' && word[index] != '\n') {
+		int asciiVal;
+		while (word[index] != '\0' && word[index] != '\n') {
+			asciiVal = (int)word[index] - 97;
+			if (root->letters_[asciiVal] == NULL) {
+				root->letters_[asciiVal] = initNode();
+			}
 			++root->numLetters_;
 			root = root->letters_[asciiVal];
 			++index;
-		} else {
-			break;
 		}
-	}
-	while (word[index] != '\0' && word[index] != '\n') {
-		root->letters_[asciiVal] = initNode();
 		++root->numLetters_;
-		root = root->letters_[asciiVal];
-		asciiVal = (int)word[++index] - 97;
 	}
-	++root->numLetters_;
 }
 
-int findWord(Node* root, char* word) {
+long findWord(Node* root, char* word) {
 	int index = 0;
-	int asciiVal;
-	while (word[index] != '\0' && word[index] != '\n') {
-		asciiVal = (int)word[index] - 97;
-		if (root->letters_[asciiVal] != NULL) {
+	if (word[index] != '\0' && word[index] != '\n') {
+		int asciiVal;
+		while (word[index] != '\0' && word[index] != '\n') {
+			asciiVal = (int)word[index] - 97;
+			if (root->letters_[asciiVal] == NULL) {
+				return 0;
+			}
 			root = root->letters_[asciiVal];
 			++index;
-		} else {
-			return 0;
 		}
+		return root->numLetters_;
 	}
-	return root->numLetters_;
+	return 0;
 }
 
 void freeMemory(Node* root) {
-	if (root->numLetters_ > 0) {
-		int i;
-		for (i = 0; i < 26 && root->numLetters_ > 0; ++i) {
-			if (root->letters_[i] != NULL) {
-				root->numLetters_ -= root->letters_[i]->numLetters_;
-				freeMemory(root->letters_[i]);
-			}
+	int i;
+	for (i = 0; i < 26 && root->numLetters_ >= 1; ++i) {
+		if (root->letters_[i] != NULL) {
+			root->numLetters_ -= root->letters_[i]->numLetters_;
+			freeMemory(root->letters_[i]);
 		}
 	}
 	free(root);
@@ -87,8 +82,8 @@ void freeMemory(Node* root) {
 }
 
 int main() {
-	int numCommands;
-	scanf("%d\n", &numCommands);
+	long numCommands;
+	scanf("%li\n", &numCommands);
 	if (numCommands >= 1 && numCommands <= 100000) {
 		Node* root_ = initNode();
 		// printf("%p\n", root_->letters_[22]);
@@ -102,35 +97,35 @@ int main() {
 		//root_->letters_[0] = child;
 		//printf("%p\n", root_->letters_[0]->letters_);
 		int currNum;
+		int addFunction;
+		int findFunction;
 		char add[4];
 		strcpy(add, "add");
 		char find[5];
 		strcpy(find, "find");
 		for (currNum = 0; currNum < numCommands; ++currNum) {
-			char input[22];
-			fgets(input, 22, stdin);
+			char input[27];
+			fgets(input, 27, stdin);
 			char* line = strtok(input, " ");
 			// int i = 0;
 			// while (input[i] != '\n') {
 			// 	printf("%c\n", input[i++]);
 			// }
-			int function = strcmp(line, add);
-			if (function == 0) {
+			addFunction = strcmp(line, add);
+			findFunction = strcmp(line, find);
+			if (addFunction == 0) {
 				line = strtok(NULL, "\0");
 				if (line[0] != '\n' && line[0] != '\0') {
 					addWord(root_, line);
 				}
-			} 
-			function = strcmp(line, find);
-			if (function == 0) {
+			} else if (findFunction == 0) {
 				line = strtok(NULL, "\0");
 				if ((root_->numLetters_ > 0) && 
 					(line[0] != '\n'  && line[0] != '\0')) {
-					printf("%d\n", findWord(root_, line));
+					printf("%li\n", findWord(root_, line));
+				} else {
+					printf("0\n");
 				}
-				else{
-                    			printf("%d\n", 0);
-                		}
 			}
 		}
 		freeMemory(root_);
