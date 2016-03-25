@@ -1,0 +1,106 @@
+>> 3
+>> add cs370
+>> find cs385
+0
+>> find cs
+1
+
+
+>> 5
+>> add testcasesarefun
+>> add testcasesareuseful
+>> add test123
+>> find test
+3
+>> find testcases
+2
+
+
+6
+>> add amazing
+>> >> add america
+>> add apple
+>> add orange
+>> find am
+2
+>> find a
+3
+
+
+5
+>> find something
+0
+>> add something
+>> find something
+1
+>> add some
+>> find some
+2
+
+
+>> 3
+>> add two words
+>> find words
+0
+>> find two
+1
+
+
+>> 7
+>> add words
+>> add sdorw
+>> find s
+1
+>> find w
+1
+>> add work
+>> find wor
+2
+>> find work
+1
+
+
+>> 4
+>> add test
+>> add tesT
+>> find tes
+2
+>> find tesT
+1
+
+
+>> 9
+>> add find
+>> find add
+0
+>> add add
+>> find add
+1
+>> add aaa
+>> find a
+2
+>> find f
+1
+>> add abc
+>> find a
+3
+
+
+4
+>> add test
+>> add case
+>> find test case
+0
+>> find test
+1
+
+
+>> 6
+>> add march
+>> add may
+>> add june
+>> find ma
+2
+>> add july
+>> find ju
+2
